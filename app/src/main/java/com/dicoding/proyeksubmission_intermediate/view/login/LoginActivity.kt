@@ -33,7 +33,6 @@ class LoginActivity : AppCompatActivity() {
         setupAction()
         playAnimation()
 
-
         setMyButtonEnable()
         binding.emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
