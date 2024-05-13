@@ -1,6 +1,7 @@
 package com.dicoding.proyeksubmission_intermediate.data
 
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiConfig
+import com.dicoding.proyeksubmission_intermediate.data.api.RegisterResponse
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserPreference
 import kotlinx.coroutines.flow.Flow
@@ -15,8 +16,8 @@ class UserRepository private constructor(
         userPreference.saveSession(user)
     }
 
-    suspend fun registerUser(name: String, email: String, password: String) {
-        apiService.register(name, email, password)
+    suspend fun register(name: String, email: String, password: String): RegisterResponse {
+        return apiService.register(name, email, password)
     }
 
     fun getSession(): Flow<UserModel> {
