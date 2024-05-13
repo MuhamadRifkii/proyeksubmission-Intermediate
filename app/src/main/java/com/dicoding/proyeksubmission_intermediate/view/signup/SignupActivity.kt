@@ -93,13 +93,11 @@ class SignupActivity : AppCompatActivity() {
 
             viewModel.viewModelScope.launch {
                 try {
-                    //get success message
                     val message = viewModel.register(name, email, password).message
-                    showAlertDialog("Success", message.toString(), "Lanjut") {
+                    showAlertDialog("Yeah!", message.toString(), "Lanjut") {
                         finish()
                     }
                 } catch (e: HttpException) {
-                    //get error message
                     val jsonInString = e.response()?.errorBody()?.string()
                     val errorBody = Gson().fromJson(jsonInString, RegisterResponse::class.java)
                     val errorMessage = errorBody.message

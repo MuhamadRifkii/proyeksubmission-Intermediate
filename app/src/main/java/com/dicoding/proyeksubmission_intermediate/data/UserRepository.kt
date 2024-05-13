@@ -1,6 +1,7 @@
 package com.dicoding.proyeksubmission_intermediate.data
 
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiConfig
+import com.dicoding.proyeksubmission_intermediate.data.api.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.data.api.RegisterResponse
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserPreference
@@ -14,6 +15,10 @@ class UserRepository private constructor(
 
     suspend fun saveSession(user: UserModel) {
         userPreference.saveSession(user)
+    }
+
+    suspend fun login(email: String, password: String): LoginResponse {
+        return apiService.login(email, password)
     }
 
     suspend fun register(name: String, email: String, password: String): RegisterResponse {
