@@ -63,6 +63,10 @@ class SignupActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable) {
             }
         })
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
     private fun setMyButtonEnable() {

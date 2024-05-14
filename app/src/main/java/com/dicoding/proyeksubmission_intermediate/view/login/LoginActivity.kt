@@ -57,6 +57,10 @@ class LoginActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable) {
             }
         })
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
     private fun setMyButtonEnable() {
@@ -86,7 +90,6 @@ class LoginActivity : AppCompatActivity() {
             viewModel.viewModelScope.launch {
                 try {
                     val loginResponse = viewModel.login(email, password)
-
 
                     if (loginResponse.message == "success") {
                         showAlertDialog("Yeah!", loginResponse.message.toString(), "Lanjut") {

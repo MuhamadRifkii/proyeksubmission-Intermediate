@@ -14,6 +14,9 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
     private val _loginResult = MutableLiveData<LoginResponse>()
     val loginResult: LiveData<LoginResponse> = _loginResult
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
 //    fun login(email: String, password: String) {
 //        viewModelScope.launch {
 //            val result = repository.login(email, password)
@@ -22,7 +25,12 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 //    }
 
     suspend fun login(email: String, password: String): LoginResponse {
-        return repository.login(email, password)
+        _isLoading.value = true
+        try {
+            return repository.login(email, password)
+        } finally {
+            _isLoading.value = false
+        }
     }
 
     fun saveSession(user: UserModel) {
