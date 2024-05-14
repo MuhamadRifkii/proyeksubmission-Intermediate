@@ -12,13 +12,10 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.Observer
 import com.dicoding.proyeksubmission_intermediate.data.api.RegisterResponse
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivitySignupBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
-import com.google.gson.Gson
-import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
@@ -67,6 +64,10 @@ class SignupActivity : AppCompatActivity() {
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+
+        viewModel.registerResult.observe(this, Observer { registerResponse ->
+            handleRegisterResult(registerResponse)
+        })
     }
 
     private fun setMyButtonEnable() {
@@ -95,18 +96,18 @@ class SignupActivity : AppCompatActivity() {
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
 
-            viewModel.viewModelScope.launch {
-                try {
-                    val message = viewModel.register(name, email, password).message
-                    showAlertDialog("Yeah!", message.toString(), "Lanjut") {
-                        finish()
-                    }
-                } catch (e: HttpException) {
-                    val jsonInString = e.response()?.errorBody()?.string()
-                    val errorBody = Gson().fromJson(jsonInString, RegisterResponse::class.java)
-                    val errorMessage = errorBody.message
-                    showAlertDialog("Error", errorMessage.toString(), "OK", null)
+            viewModel.register(name, email, password)
+        }
+    }
+
+    private fun handleRegisterResult(registerResponse: RegisterResponse?) {
+        registerResponse?.let {
+            if (it.message == "User created") {
+                showAlertDialog("Success", it.message, "OK") {
+                    finish()
                 }
+            } else {
+                showAlertDialog("Error", it.message ?: "Unknown error", "OK", null)
             }
         }
     }

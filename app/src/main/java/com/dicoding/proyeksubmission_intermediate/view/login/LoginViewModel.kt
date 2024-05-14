@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.proyeksubmission_intermediate.data.UserRepository
 import com.dicoding.proyeksubmission_intermediate.data.api.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 
@@ -17,19 +19,24 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-//    fun login(email: String, password: String) {
-//        viewModelScope.launch {
-//            val result = repository.login(email, password)
-//            _loginResult.value = result
-//        }
-//    }
-
-    suspend fun login(email: String, password: String): LoginResponse {
+    fun login(email: String, password: String) {
         _isLoading.value = true
-        try {
-            return repository.login(email, password)
-        } finally {
-            _isLoading.value = false
+        viewModelScope.launch {
+            try {
+                val result = repository.login(email, password)
+                _loginResult.postValue(result)
+            } catch (e: HttpException) {
+                val errorResponse = e.response()?.errorBody()?.string()
+                val errorMessage = errorResponse?.let {
+                    Gson().fromJson(it, LoginResponse::class.java).message
+                } ?: e.message()
+                _loginResult.postValue(LoginResponse(message = errorMessage))
+            }
+            catch (e: Exception) {
+                _loginResult.postValue(LoginResponse(message = e.message ?: "Unknown error"))
+            } finally {
+                _isLoading.postValue(false)
+            }
         }
     }
 

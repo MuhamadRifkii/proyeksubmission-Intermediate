@@ -13,15 +13,12 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.viewModelScope
-import com.dicoding.proyeksubmission_intermediate.data.api.RegisterResponse
+import androidx.lifecycle.Observer
+import com.dicoding.proyeksubmission_intermediate.data.api.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityLoginBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
 import com.dicoding.proyeksubmission_intermediate.view.main.MainActivity
-import com.google.gson.Gson
-import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -61,6 +58,10 @@ class LoginActivity : AppCompatActivity() {
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+
+        viewModel.loginResult.observe(this, Observer { loginResponse ->
+            loginResultHandler(loginResponse)
+        })
     }
 
     private fun setMyButtonEnable() {
@@ -87,27 +88,22 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
 
-            viewModel.viewModelScope.launch {
-                try {
-                    val loginResponse = viewModel.login(email, password)
+            viewModel.login(email, password)
+        }
+    }
 
-                    if (loginResponse.message == "success") {
-                        showAlertDialog("Yeah!", loginResponse.message.toString(), "Lanjut") {
-                            viewModel.saveSession(UserModel(email, password))
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                    } else {
-                        showAlertDialog("Error", loginResponse.message ?: "Unknown error", "OK", null)
-                    }
-                } catch (e: HttpException) {
-                    val jsonInString = e.response()?.errorBody()?.string() ?: "Unknown error"
-                    val errorBody = Gson().fromJson(jsonInString, RegisterResponse::class.java)
-                    val errorMessage = errorBody.message
-                    showAlertDialog("Error", errorMessage.toString(), "OK", null)
+    private fun loginResultHandler(loginResponse: LoginResponse?) {
+        loginResponse?.let {
+            if (it.message == "success") {
+                showAlertDialog("Yeah!", it.message, "Lanjut") {
+                    viewModel.saveSession(UserModel(binding.emailEditText.text.toString(), binding.passwordEditText.text.toString()))
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
                 }
+            } else {
+                showAlertDialog("Error", it.message ?: "Unknown error", "OK", null)
             }
         }
     }
