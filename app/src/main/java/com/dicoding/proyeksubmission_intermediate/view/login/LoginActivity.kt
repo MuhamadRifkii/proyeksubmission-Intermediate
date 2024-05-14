@@ -13,16 +13,18 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import com.dicoding.proyeksubmission_intermediate.data.api.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityLoginBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
 import com.dicoding.proyeksubmission_intermediate.view.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLoginBinding
     private val viewModel by viewModels<LoginViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,6 @@ class LoginActivity : AppCompatActivity() {
         setupView()
         setupAction()
         playAnimation()
-
 
         setMyButtonEnable()
         binding.emailEditText.addTextChangedListener(object : TextWatcher {
@@ -52,6 +53,14 @@ class LoginActivity : AppCompatActivity() {
             }
             override fun afterTextChanged(s: Editable) {
             }
+        })
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.loginResult.observe(this, Observer { loginResponse ->
+            loginResultHandler(loginResponse)
         })
     }
 
@@ -77,20 +86,42 @@ class LoginActivity : AppCompatActivity() {
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
             val email = binding.emailEditText.text.toString()
-            viewModel.saveSession(UserModel(email, "sample_token"))
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
-                setPositiveButton("Lanjut") { _, _ ->
-                    val intent = Intent(context, MainActivity::class.java)
+            val password = binding.passwordEditText.text.toString()
+
+            viewModel.login(email, password)
+        }
+    }
+
+    private fun loginResultHandler(loginResponse: LoginResponse?) {
+        loginResponse?.let {
+            if (it.message == "success") {
+                showAlertDialog("Yeah!", it.message, "Lanjut") {
+                    viewModel.saveSession(UserModel(binding.emailEditText.text.toString(), binding.passwordEditText.text.toString()))
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
                     finish()
                 }
-                create()
-                show()
+            } else {
+                showAlertDialog("Error", it.message ?: "Unknown error", "OK", null)
             }
         }
+    }
+
+    private fun showAlertDialog(title: String, message: String, buttonText: String, action: (() -> Unit)?) {
+        val builder = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(buttonText) { dialog, _ ->
+                action?.invoke()
+                dialog.dismiss()
+            }
+
+        if (action == null) {
+            builder.setCancelable(true)
+        }
+
+        builder.show()
     }
 
     private fun playAnimation() {
