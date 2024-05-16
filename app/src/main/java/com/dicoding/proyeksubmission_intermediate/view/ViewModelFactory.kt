@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.proyeksubmission_intermediate.data.UserRepository
 import com.dicoding.proyeksubmission_intermediate.di.Injection
+import com.dicoding.proyeksubmission_intermediate.view.detail_page.DetailStoryViewModel
 import com.dicoding.proyeksubmission_intermediate.view.login.LoginViewModel
 import com.dicoding.proyeksubmission_intermediate.view.main.MainViewModel
 import com.dicoding.proyeksubmission_intermediate.view.signup.SignupViewModel
@@ -22,6 +23,9 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
             }
             modelClass.isAssignableFrom(SignupViewModel::class.java) -> {
                 SignupViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(DetailStoryViewModel::class.java) -> {
+                DetailStoryViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

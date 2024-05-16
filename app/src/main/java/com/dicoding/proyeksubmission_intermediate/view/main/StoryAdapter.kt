@@ -1,11 +1,13 @@
 package com.dicoding.proyeksubmission_intermediate.view.main
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.proyeksubmission_intermediate.data.response.ListStoryItem
 import com.dicoding.proyeksubmission_intermediate.databinding.StoryItemBinding
+import com.dicoding.proyeksubmission_intermediate.view.detail_page.DetailStoryActivity
 
 class StoryAdapter(private val listStory: List<ListStoryItem>) :
     RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
@@ -27,7 +29,13 @@ class StoryAdapter(private val listStory: List<ListStoryItem>) :
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        holder.bind(listStory[position])
+        val story = listStory[position]
+        holder.bind(story)
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, DetailStoryActivity::class.java)
+            intent.putExtra("storyId", story.id)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = listStory.size

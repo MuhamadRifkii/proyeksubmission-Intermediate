@@ -15,6 +15,9 @@
         android:theme="@style/Theme.ProyeksubmissionIntermediate"
         tools:targetApi="31">
         <activity
+            android:name=".view.detail_page.DetailStoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.signup.SignupActivity"
             android:exported="false" />
         <activity
@@ -22,8 +25,7 @@
             android:exported="false" />
         <activity
             android:name=".view.welcome.WelcomeActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".view.main.MainActivity"
             android:exported="true">

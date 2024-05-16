@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,25 +39,26 @@ class MainActivity : AppCompatActivity() {
                             // Show loading indicator
                             binding.progressBar.visibility = View.VISIBLE
                         }
+
                         is FetchResult.Success -> {
                             binding.progressBar.visibility = View.GONE
                             val stories = result.data
                             val adapter = StoryAdapter(stories)
                             binding.recyclerView.adapter = adapter
                         }
+
                         is FetchResult.Error -> {
                             binding.progressBar.visibility = View.GONE
-                            // Show error message
-                            // e.g., Toast.makeText(this, "Error: ${result.exception.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 })
             }
         })
+    }
+}
 //        setupView()
 //        setupAction()
 //        playAnimation()
-    }
 
 //    private fun setupView() {
 //        @Suppress("DEPRECATION")
@@ -96,5 +96,3 @@ class MainActivity : AppCompatActivity() {
 //            start()
 //        }
 //    }
-
-}

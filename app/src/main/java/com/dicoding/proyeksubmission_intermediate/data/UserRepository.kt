@@ -3,6 +3,7 @@ package com.dicoding.proyeksubmission_intermediate.data
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiService
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserPreference
+import com.dicoding.proyeksubmission_intermediate.data.response.DetailStoryResponse
 import com.dicoding.proyeksubmission_intermediate.data.response.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.data.response.RegisterResponse
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +32,10 @@ class UserRepository private constructor(
 
     suspend fun getUserToken(): String {
         return getSession().first().token
+    }
+
+    suspend fun getDetailStory(storyId: String): DetailStoryResponse {
+        return apiService.getDetailStory(storyId)
     }
 
     suspend fun logout() {
