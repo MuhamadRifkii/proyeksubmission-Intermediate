@@ -1,17 +1,17 @@
 package com.dicoding.proyeksubmission_intermediate.data
 
-import com.dicoding.proyeksubmission_intermediate.data.api.ApiConfig
-import com.dicoding.proyeksubmission_intermediate.data.api.LoginResponse
-import com.dicoding.proyeksubmission_intermediate.data.api.RegisterResponse
+import com.dicoding.proyeksubmission_intermediate.data.api.ApiService
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserPreference
+import com.dicoding.proyeksubmission_intermediate.data.response.LoginResponse
+import com.dicoding.proyeksubmission_intermediate.data.response.RegisterResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class UserRepository private constructor(
-    private val userPreference: UserPreference
+    private val userPreference: UserPreference,
+    private val apiService: ApiService
 ) {
-
-    private val apiService = ApiConfig.getApiService()
 
     suspend fun saveSession(user: UserModel) {
         userPreference.saveSession(user)
@@ -29,6 +29,10 @@ class UserRepository private constructor(
         return userPreference.getSession()
     }
 
+    suspend fun getUserToken(): String {
+        return getSession().first().token
+    }
+
     suspend fun logout() {
         userPreference.logout()
     }
@@ -37,10 +41,11 @@ class UserRepository private constructor(
         @Volatile
         private var instance: UserRepository? = null
         fun getInstance(
-            userPreference: UserPreference
+            userPreference: UserPreference,
+            apiService: ApiService
         ): UserRepository =
             instance ?: synchronized(this) {
-                instance ?: UserRepository(userPreference)
+                instance ?: UserRepository(userPreference, apiService)
             }.also { instance = it }
     }
 }

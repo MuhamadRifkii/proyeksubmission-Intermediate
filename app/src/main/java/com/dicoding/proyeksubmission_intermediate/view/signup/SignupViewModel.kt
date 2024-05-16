@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.proyeksubmission_intermediate.data.UserRepository
-import com.dicoding.proyeksubmission_intermediate.data.api.RegisterResponse
+import com.dicoding.proyeksubmission_intermediate.data.response.RegisterResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.HttpException

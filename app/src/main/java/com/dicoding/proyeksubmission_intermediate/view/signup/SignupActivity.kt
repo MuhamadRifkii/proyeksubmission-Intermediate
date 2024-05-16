@@ -13,7 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.dicoding.proyeksubmission_intermediate.data.api.RegisterResponse
+import com.dicoding.proyeksubmission_intermediate.data.response.RegisterResponse
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivitySignupBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
 

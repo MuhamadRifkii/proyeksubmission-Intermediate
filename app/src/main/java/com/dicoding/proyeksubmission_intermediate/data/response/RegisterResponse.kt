@@ -1,4 +1,4 @@
-package com.dicoding.proyeksubmission_intermediate.data.api
+package com.dicoding.proyeksubmission_intermediate.data.response
 
 import com.google.gson.annotations.SerializedName
 
