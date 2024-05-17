@@ -35,20 +35,16 @@ class MainActivity : AppCompatActivity() {
         viewModel.stories.observe(this, Observer { result ->
             when (result) {
                 is FetchResult.Loading -> {
-                    // Show loading indicator
                     binding.progressBar.visibility = View.VISIBLE
                 }
-
                 is FetchResult.Success -> {
                     binding.progressBar.visibility = View.GONE
                     val stories = result.data
                     val adapter = StoryAdapter(stories)
                     binding.recyclerView.adapter = adapter
                 }
-
                 is FetchResult.Error -> {
                     binding.progressBar.visibility = View.GONE
-                    // Handle the error
                 }
             }
         })
