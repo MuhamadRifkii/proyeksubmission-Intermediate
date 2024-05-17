@@ -33,29 +33,7 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-//    fun getListStories() {
-//        _stories.value = FetchResult.Loading
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                val token = repository.getUserToken()
-//                val response = ApiConfig.getApiService(token).getStories()
-//                val listStory = response.listStory
-//                _stories.postValue(FetchResult.Success(listStory))
-//            } catch (e: HttpException) {
-//                val errorBody = e.response()?.errorBody()?.string()
-//                val errorMessage = if (errorBody != null) {
-//                    Gson().fromJson(errorBody, StoryResponse::class.java).message
-//                } else {
-//                    e.message()
-//                }
-//                _stories.postValue(FetchResult.Error(Throwable(errorMessage)))
-//            } catch (e: Exception) {
-//                _stories.postValue(FetchResult.Error(e))
-//            }
-//        }
-//    }
-//
-
+    //TODO Add ability to logout account
     fun logout() {
         viewModelScope.launch {
             repository.logout()

@@ -14,4 +14,12 @@
     <string name="greeting">Halo %1$s,</string>
     <string name="logout">Keluar</string>
     <string name="description">description</string>
+    <string name="username">username</string>
+    <string name="upload_complete">Story created successfully</string>
+
+    <string name="camera_x">CameraX</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="upload">Unggah</string>
+    <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
 </resources>

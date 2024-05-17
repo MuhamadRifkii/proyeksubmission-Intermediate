@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         playAnimation()
 
         setMyButtonEnable()
+        // TODO Maybe simplify the input checking
         binding.emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }

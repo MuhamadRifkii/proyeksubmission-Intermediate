@@ -24,8 +24,16 @@ class DetailStoryActivity : AppCompatActivity() {
         val storyId = intent.getStringExtra("storyId")
         Log.d("DetailStoryActivity", "Story ID: $storyId")
 
-        storyId?.let { viewModel.loadDetailStory(it) }
-
+        storyId?.let { id ->
+            viewModel.getSession().observe(this, Observer { user ->
+                if (user != null) {
+                    viewModel.loadDetailStory(id)
+                } else {
+                    // Handle the case where session is not available
+                    Log.e("DetailStoryActivity", "Session not available")
+                }
+            })
+        }
         viewModel.detailStory.observe(this, Observer { result ->
             binding.progressBar2.visibility = View.VISIBLE
             result.onSuccess { response ->
@@ -36,6 +44,11 @@ class DetailStoryActivity : AppCompatActivity() {
                 handleError(error)
             }
         })
+    }
+
+    override fun onResume() {
+        binding.progressBar2.visibility = View.GONE
+        super.onResume()
     }
 
     private fun displayDetailStory(story: Story) {
@@ -52,6 +65,6 @@ class DetailStoryActivity : AppCompatActivity() {
     }
 
     private fun handleError(error: Throwable) {
-        // Implementasi logika untuk menangani kesalahan
+        //TODO("Add error handling logic")
     }
 }

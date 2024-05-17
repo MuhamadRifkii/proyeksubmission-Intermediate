@@ -33,6 +33,7 @@ class SignupActivity : AppCompatActivity() {
         playAnimation()
 
         setMyButtonEnable()
+        // TODO Maybe simplify the input checking
         binding.nameEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }

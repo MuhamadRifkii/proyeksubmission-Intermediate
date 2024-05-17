@@ -2,13 +2,17 @@ package com.dicoding.proyeksubmission_intermediate.view.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.dicoding.proyeksubmission_intermediate.R
 import com.dicoding.proyeksubmission_intermediate.data.FetchResult
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityMainBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
+import com.dicoding.proyeksubmission_intermediate.view.upload.UploadStoryActivity
 import com.dicoding.proyeksubmission_intermediate.view.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
@@ -48,8 +52,48 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        UploadStory()
+    }
+
+    override fun onResume() {
+        viewModel.getSession().observe(this) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(this, WelcomeActivity::class.java))
+                finish()
+            } else {
+                if (viewModel.stories.value == null) {
+                    viewModel.getListStories()
+                }
+            }
+        }
+        super.onResume()
+    }
+
+    private fun UploadStory() {
+        binding.fabUpload.setOnClickListener {
+            val intent = Intent(this, UploadStoryActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_item, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.logout -> {
+                viewModel.logout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
+// TODO: Get rid this unused animation function, or better, add animation in each item story
+
 //        setupView()
 //        setupAction()
 //        playAnimation()
