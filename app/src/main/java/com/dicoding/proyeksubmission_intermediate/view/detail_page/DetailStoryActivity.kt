@@ -2,6 +2,7 @@ package com.dicoding.proyeksubmission_intermediate.view.detail_page
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -26,9 +27,12 @@ class DetailStoryActivity : AppCompatActivity() {
         storyId?.let { viewModel.loadDetailStory(it) }
 
         viewModel.detailStory.observe(this, Observer { result ->
+            binding.progressBar2.visibility = View.VISIBLE
             result.onSuccess { response ->
+                binding.progressBar2.visibility = View.GONE
                 displayDetailStory(response.story)
             }.onFailure { error ->
+                binding.progressBar2.visibility = View.GONE
                 handleError(error)
             }
         })

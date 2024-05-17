@@ -1,5 +1,6 @@
 package com.dicoding.proyeksubmission_intermediate.view.main
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import com.dicoding.proyeksubmission_intermediate.view.detail_page.DetailStoryAc
 class StoryAdapter(private val listStory: List<ListStoryItem>) :
     RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
-    class StoryViewHolder(private val binding: StoryItemBinding) :
+    inner class StoryViewHolder(val binding: StoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             binding.username.text = story.name
@@ -34,7 +35,13 @@ class StoryAdapter(private val listStory: List<ListStoryItem>) :
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, DetailStoryActivity::class.java)
             intent.putExtra("storyId", story.id)
-            holder.itemView.context.startActivity(intent)
+            val options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
+                holder.itemView.context as Activity,
+                androidx.core.util.Pair(holder.binding.image, "image"),
+                androidx.core.util.Pair(holder.binding.username, "username"),
+                androidx.core.util.Pair(holder.binding.description, "description")
+            )
+            holder.itemView.context.startActivity(intent, options.toBundle())
         }
     }
 
