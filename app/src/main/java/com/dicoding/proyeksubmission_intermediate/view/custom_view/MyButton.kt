@@ -27,7 +27,7 @@ class MyButton : AppCompatButton {
         super.onDraw(canvas)
         background = if (isEnabled) enabledBackground else disabledBackground
         setTextColor(txtColor)
-        textSize = 14f
+        textSize = 16f
         gravity = Gravity.CENTER
     }
 }

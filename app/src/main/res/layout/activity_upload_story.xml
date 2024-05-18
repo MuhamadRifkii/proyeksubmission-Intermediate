@@ -84,9 +84,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:gravity="start"
                     android:hint="@string/description"
-                    android:lines="9"
-                    android:minLines="2"
+                    android:lines="7"
                     tools:ignore="SpeakableTextPresentCheck" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

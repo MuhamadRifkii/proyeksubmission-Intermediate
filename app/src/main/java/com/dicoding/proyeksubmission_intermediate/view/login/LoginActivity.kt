@@ -3,13 +3,10 @@ package com.dicoding.proyeksubmission_intermediate.view.login
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,30 +27,22 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupView()
+        supportActionBar?.hide()
+
         setupAction()
         playAnimation()
 
         setMyButtonEnable()
-        // TODO Maybe simplify the input checking
-        binding.emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 setMyButtonEnable()
             }
-            override fun afterTextChanged(s: Editable) {
-            }
-        })
-        binding.passwordEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
-            override fun afterTextChanged(s: Editable) {
-            }
-        })
+            override fun afterTextChanged(s: Editable) {}
+        }
+
+        binding.emailEditText.addTextChangedListener(textWatcher)
+        binding.passwordEditText.addTextChangedListener(textWatcher)
 
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -68,19 +57,6 @@ class LoginActivity : AppCompatActivity() {
         val email = binding.emailEditText.text.toString()
         val password = binding.passwordEditText.text.toString()
         binding.loginButton.isEnabled = email.isNotEmpty() && password.isNotEmpty()
-    }
-
-    private fun setupView() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
     }
 
     private fun setupAction() {
