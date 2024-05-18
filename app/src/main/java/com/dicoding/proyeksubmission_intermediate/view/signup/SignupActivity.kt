@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.dicoding.proyeksubmission_intermediate.R
 import com.dicoding.proyeksubmission_intermediate.data.response.RegisterResponse
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivitySignupBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
@@ -72,7 +73,7 @@ class SignupActivity : AppCompatActivity() {
     private fun handleRegisterResult(registerResponse: RegisterResponse?) {
         registerResponse?.let {
             if (it.message == "User created") {
-                showAlertDialog("Success", it.message, "OK") {
+                showAlertDialog("Success", getString(R.string.register_success), "OK") {
                     finish()
                 }
             } else {

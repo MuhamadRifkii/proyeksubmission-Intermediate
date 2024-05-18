@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.dicoding.proyeksubmission_intermediate.R
 import com.dicoding.proyeksubmission_intermediate.data.response.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityLoginBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
@@ -71,12 +73,11 @@ class LoginActivity : AppCompatActivity() {
     private fun loginResultHandler(loginResponse: LoginResponse?) {
         loginResponse?.let {
             if (it.message == "success") {
-                showAlertDialog("Yeah!", it.message, "Lanjut") {
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
-                }
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show()
+                finish()
             } else {
                 showAlertDialog("Error", it.message ?: "Unknown error", "OK", null)
             }

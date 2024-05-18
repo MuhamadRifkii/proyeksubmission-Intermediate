@@ -39,7 +39,8 @@ class StoryAdapter(private val listStory: List<ListStoryItem>) :
                 holder.itemView.context as Activity,
                 androidx.core.util.Pair(holder.binding.image, "image"),
                 androidx.core.util.Pair(holder.binding.username, "username"),
-                androidx.core.util.Pair(holder.binding.description, "description")
+                androidx.core.util.Pair(holder.binding.description, "description"),
+                androidx.core.util.Pair(holder.binding.cardListStory, "shared_card_view")
             )
             holder.itemView.context.startActivity(intent, options.toBundle())
         }

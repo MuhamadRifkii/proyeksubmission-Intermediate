@@ -29,7 +29,6 @@ class DetailStoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val storyId = intent.getStringExtra("storyId")
-        Log.d("DetailStoryActivity", "Story ID: $storyId")
 
         storyId?.let { id ->
             viewModel.getSession().observe(this, Observer { user ->

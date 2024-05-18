@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Story App</string>
+    <string name="app_alt">Dicoding Story</string>
     <string name="signup">Register</string>
     <string name="login">Login</string>
     <string name="message_welcome_page">Want to share knowledge about Android, iOS, Machine Learning, Cloud, Front-End, Back-End, and other IT fields? Share your story using Dicoding Story!</string>
@@ -11,6 +12,8 @@
     <string name="title_login_page">Ready to share your story?</string>
     <string name="name">Name</string>
     <string name="message_main_page">Happy sharing on Dicoding.</string>
+    <string name="register_success">You have successfully registered. Next, please log in!</string>
+    <string name="login_success">Login success!</string>
     <string name="greeting">Hello %1$s,</string>
 
     <string name="logout">Logout</string>
@@ -30,5 +33,6 @@
     <string name="ch_lang">Change Language</string>
     <string name="detected_lang">English</string>
     <string name="cur_lang">Current language :</string>
+    <string name="preview">Preview : </string>
 
 </resources>
