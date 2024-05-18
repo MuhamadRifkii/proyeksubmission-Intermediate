@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 is FetchResult.Error -> {
                     binding.progressBar.visibility = View.GONE
+                    handleError(result.exception)
                 }
             }
         })
@@ -93,46 +95,8 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun handleError(error: Throwable) {
+        Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+    }
 }
-// TODO: Get rid this unused animation function, or better, add animation in each item story
-
-//        setupView()
-//        setupAction()
-//        playAnimation()
-
-//    private fun setupView() {
-//        @Suppress("DEPRECATION")
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            window.insetsController?.hide(WindowInsets.Type.statusBars())
-//        } else {
-//            window.setFlags(
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN
-//            )
-//        }
-//        supportActionBar?.hide()
-//    }
-
-//    private fun setupAction() {
-//        binding.logoutButton.setOnClickListener {
-//            viewModel.logout()
-//        }
-//    }
-
-//    private fun playAnimation() {
-//        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
-//            duration = 6000
-//            repeatCount = ObjectAnimator.INFINITE
-//            repeatMode = ObjectAnimator.REVERSE
-//        }.start()
-//
-//        val tv_name = ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(500)
-//        val tv_message = ObjectAnimator.ofFloat(binding.messageTextView, View.ALPHA, 1f).setDuration(500)
-//        val logout = ObjectAnimator.ofFloat(binding.logoutButton, View.ALPHA, 1f).setDuration(500)
-//
-//        AnimatorSet().apply {
-//            playSequentially(tv_name, tv_message, logout)
-//            startDelay = 500
-//            start()
-//        }
-//    }

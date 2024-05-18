@@ -53,9 +53,9 @@ class UserRepository private constructor(
             } else {
                 e.message()
             }
-            FetchResult.Error(Throwable(errorMessage))
+            throw Exception(errorMessage)
         } catch (e: Exception) {
-            FetchResult.Error(e)
+            throw e
         }
     }
 

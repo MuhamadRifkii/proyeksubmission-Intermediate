@@ -3,6 +3,7 @@ package com.dicoding.proyeksubmission_intermediate.view.detail_page
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -29,7 +30,6 @@ class DetailStoryActivity : AppCompatActivity() {
                 if (user != null) {
                     viewModel.loadDetailStory(id)
                 } else {
-                    // Handle the case where session is not available
                     Log.e("DetailStoryActivity", "Session not available")
                 }
             })
@@ -65,6 +65,6 @@ class DetailStoryActivity : AppCompatActivity() {
     }
 
     private fun handleError(error: Throwable) {
-        //TODO("Add error handling logic")
+        Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
     }
 }
