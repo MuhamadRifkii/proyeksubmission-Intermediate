@@ -40,9 +40,12 @@ class SignupActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable) {}
         }
 
-        binding.nameEditText.addTextChangedListener(textWatcher)
-        binding.emailEditText.addTextChangedListener(textWatcher)
-        binding.passwordEditText.addTextChangedListener(textWatcher)
+        binding.apply {
+            nameEditText.addTextChangedListener(textWatcher)
+            emailEditText.addTextChangedListener(textWatcher)
+            passwordEditText.addTextChangedListener(textWatcher)
+
+        }
 
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

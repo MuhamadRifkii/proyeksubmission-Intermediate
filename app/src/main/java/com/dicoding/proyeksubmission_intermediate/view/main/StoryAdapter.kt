@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.proyeksubmission_intermediate.data.response.ListStoryItem
@@ -37,10 +38,10 @@ class StoryAdapter(private val listStory: List<ListStoryItem>) :
             intent.putExtra("storyId", story.id)
             val options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
                 holder.itemView.context as Activity,
-                androidx.core.util.Pair(holder.binding.image, "image"),
-                androidx.core.util.Pair(holder.binding.username, "username"),
-                androidx.core.util.Pair(holder.binding.description, "description"),
-                androidx.core.util.Pair(holder.binding.cardListStory, "shared_card_view")
+                Pair(holder.binding.image, "image"),
+                Pair(holder.binding.username, "username"),
+                Pair(holder.binding.description, "description"),
+                Pair(holder.binding.cardListStory, "shared_card_view")
             )
             holder.itemView.context.startActivity(intent, options.toBundle())
         }
