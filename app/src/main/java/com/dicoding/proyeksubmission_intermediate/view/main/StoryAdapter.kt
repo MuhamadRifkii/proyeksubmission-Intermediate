@@ -45,7 +45,7 @@ class StoryAdapter(private val listStory: List<ListStoryItem>) :
         }
 
         holder.itemView.alpha = 0f
-        holder.itemView.animate().alpha(1f).setDuration(300).setStartDelay((position * 100).toLong()).start()
+        holder.itemView.animate().alpha(1f).setDuration(250).setStartDelay((position * 100).toLong()).start()
     }
 
     override fun getItemCount(): Int = listStory.size

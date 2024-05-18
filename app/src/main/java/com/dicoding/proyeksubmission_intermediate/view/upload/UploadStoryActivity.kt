@@ -55,6 +55,11 @@ class UploadStoryActivity : AppCompatActivity() {
         binding = ActivityUploadStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (savedInstanceState != null) {
+            currentImageUri = savedInstanceState.getParcelable(KEY_IMAGE_URI)
+            currentImageUri?.let { showImage() }
+        }
+
         if (!allPermissionsGranted()) {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
@@ -142,5 +147,17 @@ class UploadStoryActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
+        private const val KEY_IMAGE_URI = "KEY_IMAGE_URI"
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(KEY_IMAGE_URI, currentImageUri)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        currentImageUri = savedInstanceState.getParcelable(KEY_IMAGE_URI)
+        currentImageUri?.let { showImage() }
     }
 }
