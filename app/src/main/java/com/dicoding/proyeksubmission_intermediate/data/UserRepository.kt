@@ -9,9 +9,12 @@ import com.dicoding.proyeksubmission_intermediate.data.response.ListStoryItem
 import com.dicoding.proyeksubmission_intermediate.data.response.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.data.response.RegisterResponse
 import com.dicoding.proyeksubmission_intermediate.data.response.StoryResponse
+import com.dicoding.proyeksubmission_intermediate.data.response.StoryUploadResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
 
 class UserRepository private constructor(
@@ -57,7 +60,31 @@ class UserRepository private constructor(
     }
 
     suspend fun getDetailStory(storyId: String): DetailStoryResponse {
-        return apiService.getDetailStory(storyId)
+        return try {
+            val token = getUserToken()
+            getApiService(token).getDetailStory(storyId)
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorMessage = if (errorBody != null) {
+                Gson().fromJson(errorBody, DetailStoryResponse::class.java).message
+            } else {
+                e.message()
+            }
+            throw Exception(errorMessage)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun uploadStory(image: MultipartBody.Part, description: RequestBody): StoryUploadResponse {
+        return try {
+            val token = getUserToken()
+            getApiService(token).uploadImage(image, description)
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, StoryUploadResponse::class.java)
+            throw Exception(errorResponse.message)
+        }
     }
 
     suspend fun logout() {

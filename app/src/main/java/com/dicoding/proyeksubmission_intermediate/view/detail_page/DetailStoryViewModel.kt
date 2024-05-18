@@ -31,7 +31,6 @@ class DetailStoryViewModel(private val repository: UserRepository) : ViewModel()
                     _detailStory.value = Result.failure(e)
                 }
             } else {
-                // Retry or handle the case where the session is not available
                 _detailStory.value = Result.failure(Exception("Session not available"))
             }
         }

@@ -33,7 +33,6 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    //TODO Add ability to logout account
     fun logout() {
         viewModelScope.launch {
             repository.logout()
