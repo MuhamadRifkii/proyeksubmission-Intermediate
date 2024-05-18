@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
+import com.dicoding.proyeksubmission_intermediate.R
 import java.util.regex.Pattern
 
 class EmailEditText @JvmOverloads constructor(
@@ -18,14 +19,12 @@ class EmailEditText @JvmOverloads constructor(
 
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // Do nothing.
             }
             override fun afterTextChanged(s: Editable?) {
                 if (!isValidEmail(s.toString())) {
-                    error = "Format email tidak valid"
+                    error = context.getString(R.string.invalid_email)
                 } else {
                     error = null
                 }

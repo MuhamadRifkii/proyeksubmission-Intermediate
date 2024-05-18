@@ -1,25 +1,34 @@
 <resources>
     <string name="app_name">Story App</string>
-    <string name="signup">Daftar</string>
-    <string name="login">Masuk</string>
-    <string name="message_welcome_page">Mau Berbagi Ilmu tentang Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding Story aja!</string>
-    <string name="title_welcome_page">Selamat datang di Dicoding Story!</string>
-    <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="signup">Register</string>
+    <string name="login">Login</string>
+    <string name="message_welcome_page">Want to share knowledge about Android, iOS, Machine Learning, Cloud, Front-End, Back-End, and other IT fields? Share your story using Dicoding Story!</string>
+    <string name="title_welcome_page">Welcome to Dicoding Story!</string>
+    <string name="title_signup_page">Please fill your data below</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="message_login_page">Masukkan dulu datamu ya</string>
-    <string name="title_login_page">Sudah siap untuk berbagi cerita?</string>
-    <string name="name">Nama</string>
-    <string name="message_main_page">Selamat Belajar di Dicoding.</string>
-    <string name="greeting">Halo %1$s,</string>
-    <string name="logout">Keluar</string>
+    <string name="message_login_page">Please fill your data first</string>
+    <string name="title_login_page">Ready to share your story?</string>
+    <string name="name">Name</string>
+    <string name="message_main_page">Happy sharing on Dicoding.</string>
+    <string name="greeting">Hello %1$s,</string>
+
+    <string name="logout">Logout</string>
     <string name="description">description</string>
     <string name="username">username</string>
     <string name="upload_complete">Story created successfully</string>
 
-    <string name="camera_x">CameraX</string>
-    <string name="camera">Kamera</string>
-    <string name="gallery">Galeri</string>
-    <string name="upload">Unggah</string>
-    <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
+    <string name="invalid_email">Invalid email format!</string>
+    <string name="invalid_password">Password must not be less than 8 characters</string>
+
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="upload_story">Upload Story</string>
+    <string name="empty_image_warning">Please insert the image file first.</string>
+    <string name="lang">Language</string>
+    <string name="ch_lang">Change Language</string>
+    <string name="detected_lang">English</string>
+    <string name="cur_lang">Current language :</string>
+
 </resources>

@@ -2,6 +2,7 @@ package com.dicoding.proyeksubmission_intermediate.view.detail_page
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -22,6 +23,11 @@ class DetailStoryActivity : AppCompatActivity() {
         binding = ActivityDetailStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val username = intent.getStringExtra("username")
+        supportActionBar?.title = username
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val storyId = intent.getStringExtra("storyId")
         Log.d("DetailStoryActivity", "Story ID: $storyId")
 
@@ -39,11 +45,20 @@ class DetailStoryActivity : AppCompatActivity() {
             result.onSuccess { response ->
                 binding.progressBar2.visibility = View.GONE
                 displayDetailStory(response.story)
+                supportActionBar?.title = response.story.name
             }.onFailure { error ->
                 binding.progressBar2.visibility = View.GONE
                 handleError(error)
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {

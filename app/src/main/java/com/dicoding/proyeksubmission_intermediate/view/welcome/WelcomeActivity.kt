@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityWelcomeBinding
+import com.dicoding.proyeksubmission_intermediate.view.language.LanguageActivity
 import com.dicoding.proyeksubmission_intermediate.view.login.LoginActivity
 import com.dicoding.proyeksubmission_intermediate.view.signup.SignupActivity
 
@@ -19,6 +20,10 @@ class WelcomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.hide()
+
+        binding.imageView2.setOnClickListener {
+            startActivity(Intent(this, LanguageActivity::class.java))
+        }
 
         setupAction()
         playAnimation()
