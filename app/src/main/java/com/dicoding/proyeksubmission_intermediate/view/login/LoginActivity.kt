@@ -14,8 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.dicoding.proyeksubmission_intermediate.data.api.LoginResponse
-import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
+import com.dicoding.proyeksubmission_intermediate.data.response.LoginResponse
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityLoginBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
 import com.dicoding.proyeksubmission_intermediate.view.main.MainActivity
@@ -36,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         playAnimation()
 
         setMyButtonEnable()
+        // TODO Maybe simplify the input checking
         binding.emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
@@ -96,7 +96,6 @@ class LoginActivity : AppCompatActivity() {
         loginResponse?.let {
             if (it.message == "success") {
                 showAlertDialog("Yeah!", it.message, "Lanjut") {
-                    viewModel.saveSession(UserModel(binding.emailEditText.text.toString(), binding.passwordEditText.text.toString()))
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)

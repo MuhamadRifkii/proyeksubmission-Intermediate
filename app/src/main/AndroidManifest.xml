@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,6 +20,12 @@
         android:theme="@style/Theme.ProyeksubmissionIntermediate"
         tools:targetApi="31">
         <activity
+            android:name=".view.upload.UploadStoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.detail_page.DetailStoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.signup.SignupActivity"
             android:exported="false" />
         <activity
@@ -22,8 +33,7 @@
             android:exported="false" />
         <activity
             android:name=".view.welcome.WelcomeActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".view.main.MainActivity"
             android:exported="true">
