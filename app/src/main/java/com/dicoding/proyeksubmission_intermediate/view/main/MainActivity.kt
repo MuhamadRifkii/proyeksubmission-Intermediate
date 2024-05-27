@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.setUserToken(user.token)
                 if (viewModel.stories.value == null) {
                     lifecycleScope.launch {
-                        viewModel.getStoriesPaged(user.token).collectLatest { pagingData ->
-                            storyAdapter.submitData(pagingData)
+                        if (viewModel.stories.value == null) {
+                             viewModel.getStoriesPaged(user.token)
                         }
                     }
                 }
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
         sessionObserver()
         setupRecyclerView()
-        UploadStory()
+        uploadStory()
     }
 
     private fun setupRecyclerView() {
@@ -122,10 +122,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else {
+                viewModel.setUserToken(user.token)
                 if (viewModel.stories.value == null) {
                     lifecycleScope.launch {
-                        viewModel.getStoriesPaged(user.token).collectLatest { pagingData ->
-                            storyAdapter.submitData(pagingData)
+                        if (viewModel.stories.value == null) {
+                            viewModel.getStoriesPaged(user.token)
                         }
                     }
                 }
@@ -134,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    private fun UploadStory() {
+    private fun uploadStory() {
         binding.fabUpload.setOnClickListener {
             val intent = Intent(this, UploadStoryActivity::class.java)
             startActivity(intent)
