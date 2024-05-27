@@ -1,7 +1,11 @@
 package com.dicoding.proyeksubmission_intermediate.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiConfig.getApiService
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiService
+import com.dicoding.proyeksubmission_intermediate.data.paging.StoryPagingSource
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserPreference
 import com.dicoding.proyeksubmission_intermediate.data.response.DetailStoryResponse
@@ -42,21 +46,32 @@ class UserRepository private constructor(
         return getSession().first().token
     }
 
-    suspend fun getListStories(token : String): FetchResult<List<ListStoryItem>> {
-        return try {
-            val response = getApiService(token).getStories()
-            FetchResult.Success(response.listStory)
-        } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorMessage = if (errorBody != null) {
-                Gson().fromJson(errorBody, StoryResponse::class.java).message
-            } else {
-                e.message()
-            }
-            throw Exception(errorMessage)
-        } catch (e: Exception) {
-            throw e
-        }
+//    suspend fun getListStories(token : String): FetchResult<List<ListStoryItem>> {
+//        return try {
+//            val response = getApiService(token).getStories()
+//            FetchResult.Success(response.listStory)
+//        } catch (e: HttpException) {
+//            val errorBody = e.response()?.errorBody()?.string()
+//            val errorMessage = if (errorBody != null) {
+//                Gson().fromJson(errorBody, StoryResponse::class.java).message
+//            } else {
+//                e.message()
+//            }
+//            throw Exception(errorMessage)
+//        } catch (e: Exception) {
+//            throw e
+//        }
+//    }
+
+    fun getStoriesPaged(token: String): Flow<PagingData<ListStoryItem>> {
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { StoryPagingSource(getApiService(token)) }
+        ).flow
     }
 
     suspend fun getListStoriesWithLocation(token : String): FetchResult<List<ListStoryItem>> {
