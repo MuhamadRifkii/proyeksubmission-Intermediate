@@ -59,6 +59,23 @@ class UserRepository private constructor(
         }
     }
 
+    suspend fun getListStoriesWithLocation(token : String): FetchResult<List<ListStoryItem>> {
+        return try {
+            val response = getApiService(token).getStoriesWithLocation()
+            FetchResult.Success(response.listStory)
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorMessage = if (errorBody != null) {
+                Gson().fromJson(errorBody, StoryResponse::class.java).message
+            } else {
+                e.message()
+            }
+            throw Exception(errorMessage)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun getDetailStory(storyId: String): DetailStoryResponse {
         return try {
             val token = getUserToken()

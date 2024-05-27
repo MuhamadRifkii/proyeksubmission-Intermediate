@@ -14,6 +14,7 @@ import com.dicoding.proyeksubmission_intermediate.data.FetchResult
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityMainBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
 import com.dicoding.proyeksubmission_intermediate.view.language.LanguageActivity
+import com.dicoding.proyeksubmission_intermediate.view.maps.MapsActivity
 import com.dicoding.proyeksubmission_intermediate.view.upload.UploadStoryActivity
 import com.dicoding.proyeksubmission_intermediate.view.welcome.WelcomeActivity
 
@@ -97,6 +98,11 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.lang -> {
                 val intent = Intent(this, LanguageActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.maps -> {
+                val intent = Intent(this, MapsActivity::class.java)
                 startActivity(intent)
                 true
             }
