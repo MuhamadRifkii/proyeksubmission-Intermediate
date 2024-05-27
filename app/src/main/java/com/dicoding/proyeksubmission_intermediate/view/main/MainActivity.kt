@@ -37,56 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.title = getString(R.string.app_alt)
 
-        viewModel.getSession().observe(this) { user ->
-            if (!user.isLogin) {
-                val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                finish()
-            } else {
-                viewModel.setUserToken(user.token)
-                if (viewModel.stories.value == null) {
-                    lifecycleScope.launch {
-                        if (viewModel.stories.value == null) {
-                             viewModel.getStoriesPaged(user.token)
-                        }
-                    }
-                }
-            }
-        }
-
-//        viewModel.getSession().observe(this) { user ->
-//            if (!user.isLogin) {
-//                startActivity(Intent(this, WelcomeActivity::class.java))
-//                finish()
-//            } else {
-//                if (viewModel.stories.value == null) {
-//                    viewModel.getListStories()
-//                }
-//            }
-//        }
-
-//        viewModel.stories.observe(this, Observer { result ->
-//            when (result) {
-//                is FetchResult.Loading -> {
-//                    binding.progressBar.visibility = View.VISIBLE
-//                }
-//                is FetchResult.Success -> {
-//                    binding.progressBar.visibility = View.GONE
-//                    val stories = result.data
-//                    val adapter = StoryAdapter(stories)
-//                    binding.recyclerView.adapter = adapter
-//                }
-//                is FetchResult.Error -> {
-//                    binding.progressBar.visibility = View.GONE
-//                    handleError(result.exception)
-//                }
-//            }
-//        })
-
         sessionObserver()
         setupRecyclerView()
         uploadStory()
+        observePagedStories()
     }
 
     private fun setupRecyclerView() {
@@ -111,7 +65,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sessionObserver() {
-
+        viewModel.getSession().observe(this) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(this, WelcomeActivity::class.java))
+                finish()
+            } else {
+                if (viewModel.pagedStories.value == null) {
+                    viewModel.getStoriesPaged()
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -122,13 +85,8 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else {
-                viewModel.setUserToken(user.token)
-                if (viewModel.stories.value == null) {
-                    lifecycleScope.launch {
-                        if (viewModel.stories.value == null) {
-                            viewModel.getStoriesPaged(user.token)
-                        }
-                    }
+                if (viewModel.pagedStories.value == null) {
+                    viewModel.getStoriesPaged()
                 }
             }
         }
@@ -141,6 +99,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    private fun observePagedStories() {
+        viewModel.pagedStories.observe(this) { pagingData ->
+            pagingData?.let {
+                storyAdapter.submitData(lifecycle, it)
+            }
+        }
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_item, menu)
