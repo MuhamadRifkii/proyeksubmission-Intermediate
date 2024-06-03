@@ -51,23 +51,6 @@ class UserRepository private constructor(
         return getSession().first().token
     }
 
-//    suspend fun getListStories(token : String): FetchResult<List<ListStoryItem>> {
-//        return try {
-//            val response = getApiService(token).getStories()
-//            FetchResult.Success(response.listStory)
-//        } catch (e: HttpException) {
-//            val errorBody = e.response()?.errorBody()?.string()
-//            val errorMessage = if (errorBody != null) {
-//                Gson().fromJson(errorBody, StoryResponse::class.java).message
-//            } else {
-//                e.message()
-//            }
-//            throw Exception(errorMessage)
-//        } catch (e: Exception) {
-//            throw e
-//        }
-//    }
-
     fun getListStories(): LiveData<PagingData<ListStoryItem>> {
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
@@ -77,7 +60,6 @@ class UserRepository private constructor(
             ),
             remoteMediator = StoryRemoteMediator(storyDatabase, apiService),
             pagingSourceFactory = {
-//                StoryPagingSource(getApiService(token))
                 storyDatabase.storyDao().getAllStory()
             }
         ).liveData

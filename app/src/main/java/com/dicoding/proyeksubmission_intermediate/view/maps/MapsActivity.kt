@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.proyeksubmission_intermediate.R
@@ -38,7 +39,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -77,17 +77,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -113,17 +102,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                         if (listStory.isNotEmpty()) {
                             val bounds = boundsBuilder.build()
-                            val padding = 100 // Padding in pixels
+                            val padding = 100
                             val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
                             mMap.animateCamera(cu)
                         }
                     }
                 }
                 is FetchResult.Error -> {
-                    // Handle error
+                    showToast("Error: ${result.exception.message}")
                 }
                 is FetchResult.Loading -> {
-                    // Show loading state if needed
+                    showToast("Loading...")
                 }
             }
         }
@@ -141,6 +130,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (exception: Resources.NotFoundException) {
             Log.e(TAG, "Can't find style. Error: ", exception)
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
