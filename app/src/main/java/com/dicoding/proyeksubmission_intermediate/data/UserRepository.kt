@@ -1,11 +1,14 @@
 package com.dicoding.proyeksubmission_intermediate.data
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiConfig.getApiService
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiService
+import com.dicoding.proyeksubmission_intermediate.data.database.StoryDatabase
 import com.dicoding.proyeksubmission_intermediate.data.paging.StoryPagingSource
+import com.dicoding.proyeksubmission_intermediate.data.paging.StoryRemoteMediator
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserPreference
 import com.dicoding.proyeksubmission_intermediate.data.response.DetailStoryResponse
@@ -23,7 +26,8 @@ import retrofit2.HttpException
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val storyDatabase: StoryDatabase
 ) {
 
     suspend fun saveSession(user: UserModel) {
@@ -63,14 +67,18 @@ class UserRepository private constructor(
 //        }
 //    }
 
-    fun getStoriesPaged(token: String): Flow<PagingData<ListStoryItem>> {
-
+    fun getListStories(token: String): Flow<PagingData<ListStoryItem>> {
+        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = 5,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { StoryPagingSource(getApiService(token)) }
+            remoteMediator = StoryRemoteMediator(storyDatabase, apiService),
+            pagingSourceFactory = {
+                StoryPagingSource(getApiService(token))
+                storyDatabase.storyDao().getAllStory()
+            }
         ).flow
     }
 
@@ -128,10 +136,11 @@ class UserRepository private constructor(
         private var instance: UserRepository? = null
         fun getInstance(
             userPreference: UserPreference,
-            apiService: ApiService
+            apiService: ApiService,
+            storyDatabase: StoryDatabase
         ): UserRepository =
             instance ?: synchronized(this) {
-                instance ?: UserRepository(userPreference, apiService)
+                instance ?: UserRepository(userPreference, apiService, storyDatabase)
             }.also { instance = it }
     }
 }

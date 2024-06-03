@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -39,6 +40,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 }
 
@@ -70,6 +72,12 @@ dependencies {
     //Glide
     implementation(libs.glide)
 
+    //Room
+    implementation (libs.androidx.room.ktx)
+    implementation (libs.androidx.room.runtime)
+    ksp (libs.androidx.room.compiler)
+
     //Paging
     implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.room.paging)
 }

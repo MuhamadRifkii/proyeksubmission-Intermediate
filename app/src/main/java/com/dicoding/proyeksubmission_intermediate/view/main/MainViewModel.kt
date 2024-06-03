@@ -21,10 +21,10 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         return repository.getSession().asLiveData()
     }
 
-    fun getStoriesPaged() {
+    fun getListStories() {
         viewModelScope.launch {
             val token = repository.getUserToken()
-            repository.getStoriesPaged(token)
+            repository.getListStories(token)
                 .cachedIn(viewModelScope)
                 .collectLatest { pagingData ->
                     _pagedStories.postValue(pagingData)
@@ -37,5 +37,4 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
             repository.logout()
         }
     }
-
 }
