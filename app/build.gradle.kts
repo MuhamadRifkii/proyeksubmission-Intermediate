@@ -53,10 +53,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
     implementation(libs.androidx.ui.android)
-    testImplementation(libs.junit)
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.play.services.location)
 
     //DataStore
     implementation(libs.androidx.datastore.preferences)
@@ -90,4 +87,9 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test) //TestDispatcher
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
+
+    testImplementation(libs.junit)
+    testImplementation("junit:junit:4.12")
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

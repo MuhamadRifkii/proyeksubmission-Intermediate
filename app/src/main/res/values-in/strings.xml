@@ -43,5 +43,9 @@
     <string name="terrain_type">Terrain</string>
     <string name="hybrid_type">Hybrid</string>
     <string name="retry">Coba lagi</string>
+    <string name="add_location">Tambahkan lokasi saat ini?</string>
+    <string name="location_info">Info Lokasi:</string>
+    <string name="lat">lat</string>
+    <string name="lon">lon</string>
 
 </resources>

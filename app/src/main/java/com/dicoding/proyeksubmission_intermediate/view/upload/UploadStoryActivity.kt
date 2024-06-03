@@ -3,6 +3,7 @@ package com.dicoding.proyeksubmission_intermediate.view.upload
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,8 @@ import com.dicoding.proyeksubmission_intermediate.data.utils.uriToFile
 import com.dicoding.proyeksubmission_intermediate.databinding.ActivityUploadStoryBinding
 import com.dicoding.proyeksubmission_intermediate.view.ViewModelFactory
 import com.dicoding.proyeksubmission_intermediate.view.main.MainActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -32,24 +35,37 @@ class UploadStoryActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var binding: ActivityUploadStoryBinding
+    private var location: Location? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private var currentImageUri: Uri? = null
 
     private val requestPermissionLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                Toast.makeText(this, "Permission request granted", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(this, "Permission request denied", Toast.LENGTH_LONG).show()
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+                permissions[Manifest.permission.CAMERA] ?: false -> {
+                    Toast.makeText(this, "Permission request granted", Toast.LENGTH_LONG).show()
+                }
+                else -> {
+                    Toast.makeText(this, "Permission request denied", Toast.LENGTH_LONG).show()
+                }
             }
         }
     private fun allPermissionsGranted() =
-        ContextCompat.checkSelfPermission(
-            this,
-            REQUIRED_PERMISSION
-        ) == PackageManager.PERMISSION_GRANTED
+        REQUIRED_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(
+                this,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +82,7 @@ class UploadStoryActivity : AppCompatActivity() {
         }
 
         if (!allPermissionsGranted()) {
-            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+            requestPermissionLauncher.launch(REQUIRED_PERMISSIONS)
         }
 
         binding.galleryButton.setOnClickListener { startGallery() }
@@ -82,6 +98,38 @@ class UploadStoryActivity : AppCompatActivity() {
                 navigateToMainActivity()
             }
         })
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getMyLastLocation()
+    }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLastLocation() {
+        if     (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ){
+            fusedLocationClient.lastLocation.addOnSuccessListener { currentLocation: Location? ->
+                if (currentLocation != null) {
+                    location = currentLocation
+                } else {
+                    Toast.makeText(
+                        this@UploadStoryActivity,
+                        "Location is not found. Try Again",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                REQUIRED_PERMISSIONS
+            )
+        }
     }
 
     private fun startGallery() {
@@ -105,9 +153,13 @@ class UploadStoryActivity : AppCompatActivity() {
         currentImageUri?.let { uri ->
             val imageFile = uriToFile(uri, this).reduceFileImage()
             Log.d("Image File", "showImage: ${imageFile.path}")
-            val description = binding.descriptionEditText.text.toString().trim()
 
+            val description = binding.descriptionEditText.text.toString().trim()
             val requestBody = description.toRequestBody("text/plain".toMediaType())
+
+            val lat = if (binding.checkBoxAddLocation.isChecked) location?.latitude?.toFloat() else null
+            val lon = if (binding.checkBoxAddLocation.isChecked) location?.longitude?.toFloat() else null
+
             val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
             val multipartBody = MultipartBody.Part.createFormData(
                 "photo",
@@ -115,7 +167,7 @@ class UploadStoryActivity : AppCompatActivity() {
                 requestImageFile
             )
 
-            viewModel.upload(multipartBody, requestBody)
+            viewModel.upload(multipartBody, requestBody, lat, lon)
         } ?: showToast(getString(R.string.empty_image_warning))
     }
 
@@ -150,11 +202,6 @@ class UploadStoryActivity : AppCompatActivity() {
         finish()
     }
 
-    companion object {
-        private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
-        private const val KEY_IMAGE_URI = "KEY_IMAGE_URI"
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
@@ -172,5 +219,14 @@ class UploadStoryActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         currentImageUri = savedInstanceState.getParcelable(KEY_IMAGE_URI)
         currentImageUri?.let { showImage() }
+    }
+
+    companion object {
+        private val REQUIRED_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        private const val KEY_IMAGE_URI = "KEY_IMAGE_URI"
     }
 }

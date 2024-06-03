@@ -6,29 +6,34 @@
     <string name="message_welcome_page">Want to share knowledge about Android, iOS, Machine Learning, Cloud, Front-End, Back-End, and other IT fields? Share your story using Dicoding Story!</string>
     <string name="title_welcome_page">Welcome to Dicoding Story!</string>
     <string name="title_signup_page">Please fill your data below</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
     <string name="message_login_page">Please fill your data first</string>
     <string name="title_login_page">Ready to share your story?</string>
     <string name="name">Name</string>
     <string name="message_main_page">Happy sharing on Dicoding.</string>
-    <string name="register_success">You have successfully registered. Next, please log in!</string>
-    <string name="login_success">Login success!</string>
     <string name="greeting">Hello %1$s,</string>
 
+    //Account
     <string name="logout">Logout</string>
     <string name="description">description</string>
     <string name="username">username</string>
-    <string name="upload_complete">Story created successfully</string>
+    <string name="register_success">You have successfully registered. Next, please log in!</string>
+    <string name="login_success">Login success!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 
+    //customview
     <string name="invalid_email">Invalid email format!</string>
     <string name="invalid_password">Password must not be less than 8 characters</string>
 
+    //Upload
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="upload">Upload</string>
     <string name="upload_story">Upload Story</string>
     <string name="empty_image_warning">Please insert the image file first.</string>
+    <string name="upload_complete">Story created successfully</string>
+
+    //Language
     <string name="lang">Language</string>
     <string name="ch_lang">Change Language</string>
     <string name="detected_lang">English</string>
@@ -43,5 +48,12 @@
     <string name="terrain_type">Terrain</string>
     <string name="hybrid_type">Hybrid</string>
     <string name="retry">Try again</string>
+    <string name="add_location">Add location?</string>
+
+    //DetailStoryActivity Location
+    <string name="location_info">Location info:</string>
+    <string name="lat">lat</string>
+    <string name="lon">lon</string>
+
 
 </resources>

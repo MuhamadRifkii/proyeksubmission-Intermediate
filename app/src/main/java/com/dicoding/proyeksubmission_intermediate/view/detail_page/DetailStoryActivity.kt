@@ -75,6 +75,16 @@ class DetailStoryActivity : AppCompatActivity() {
                     .load(url)
                     .into(binding.image)
             }
+            if (story.lat != null && story.lon != null) {
+                binding.lat.text = "Latitude: ${story.lat}"
+                binding.lon.text = "Longitude: ${story.lon}"
+                binding.lat.visibility = View.VISIBLE
+                binding.lon.visibility = View.VISIBLE
+            } else {
+                binding.textViewLoc.visibility = View.GONE
+                binding.lat.visibility = View.GONE
+                binding.lon.visibility = View.GONE
+            }
         }
     }
 

@@ -17,11 +17,11 @@ class UploadStoryViewModel(private val repository: UserRepository) : ViewModel()
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun upload(image: MultipartBody.Part, description: RequestBody) {
+    fun upload(image: MultipartBody.Part, description: RequestBody, lat : Float?, lon : Float?) {
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val successResponse = repository.uploadStory(image, description)
+                val successResponse = repository.uploadStory(image, description, lat, lon)
                 _uploadResult.value = successResponse.message
                 _isLoading.value = false
             } catch (e: Exception) {

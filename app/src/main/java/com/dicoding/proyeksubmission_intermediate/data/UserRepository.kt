@@ -117,10 +117,10 @@ class UserRepository private constructor(
         }
     }
 
-    suspend fun uploadStory(image: MultipartBody.Part, description: RequestBody): StoryUploadResponse {
+    suspend fun uploadStory(image: MultipartBody.Part, description: RequestBody, lat : Float?, lon : Float?): StoryUploadResponse {
         return try {
             val token = getUserToken()
-            getApiService(token).uploadImage(image, description)
+            getApiService(token).uploadImage(image, description, lat, lon)
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, StoryUploadResponse::class.java)
