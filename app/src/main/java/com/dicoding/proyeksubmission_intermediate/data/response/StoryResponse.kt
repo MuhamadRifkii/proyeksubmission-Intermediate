@@ -19,11 +19,11 @@ data class StoryResponse(
 @Entity(tableName = "story_item")
 data class ListStoryItem(
 
-	@field:SerializedName("photoUrl")
-	val photoUrl: String? = null,
-
 	@field:SerializedName("createdAt")
 	val createdAt: String? = null,
+
+	@field:SerializedName("photoUrl")
+	val photoUrl: String? = null,
 
 	@field:SerializedName("name")
 	val name: String? = null,

@@ -10,12 +10,11 @@ import androidx.paging.cachedIn
 import com.dicoding.proyeksubmission_intermediate.data.UserRepository
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.response.ListStoryItem
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
     private val _pagedStories = MutableLiveData<PagingData<ListStoryItem>>()
-    val pagedStories: LiveData<PagingData<ListStoryItem>> = _pagedStories
+    val pagedStories: LiveData<PagingData<ListStoryItem>> = repository.getListStories().cachedIn(viewModelScope)
 
     fun getSession(): LiveData<UserModel> {
         return repository.getSession().asLiveData()
@@ -23,12 +22,9 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun getListStories() {
         viewModelScope.launch {
-            val token = repository.getUserToken()
-            repository.getListStories(token)
-                .cachedIn(viewModelScope)
-                .collectLatest { pagingData ->
-                    _pagedStories.postValue(pagingData)
-                }
+            repository.getListStories().observeForever { pagingData ->
+                _pagedStories.postValue(pagingData)
+            }
         }
     }
 

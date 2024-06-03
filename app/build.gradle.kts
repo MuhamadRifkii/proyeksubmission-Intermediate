@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.androidx.ui.android)
     testImplementation(libs.junit)
+    testImplementation("junit:junit:4.12")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -80,4 +81,13 @@ dependencies {
     //Paging
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.room.paging)
+
+    //Testing
+    androidTestImplementation(libs.androidx.core.testing) //InstantTaskExecutorRule
+    androidTestImplementation(libs.kotlinx.coroutines.test) //TestDispatcher
+
+    testImplementation(libs.androidx.core.testing) // InstantTaskExecutorRule
+    testImplementation(libs.kotlinx.coroutines.test) //TestDispatcher
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
 }

@@ -1,13 +1,14 @@
 package com.dicoding.proyeksubmission_intermediate.data
 
+import androidx.lifecycle.LiveData
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiConfig.getApiService
 import com.dicoding.proyeksubmission_intermediate.data.api.ApiService
 import com.dicoding.proyeksubmission_intermediate.data.database.StoryDatabase
-import com.dicoding.proyeksubmission_intermediate.data.paging.StoryPagingSource
 import com.dicoding.proyeksubmission_intermediate.data.paging.StoryRemoteMediator
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserModel
 import com.dicoding.proyeksubmission_intermediate.data.pref.UserPreference
@@ -67,7 +68,7 @@ class UserRepository private constructor(
 //        }
 //    }
 
-    fun getListStories(token: String): Flow<PagingData<ListStoryItem>> {
+    fun getListStories(): LiveData<PagingData<ListStoryItem>> {
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
@@ -76,10 +77,10 @@ class UserRepository private constructor(
             ),
             remoteMediator = StoryRemoteMediator(storyDatabase, apiService),
             pagingSourceFactory = {
-                StoryPagingSource(getApiService(token))
+//                StoryPagingSource(getApiService(token))
                 storyDatabase.storyDao().getAllStory()
             }
-        ).flow
+        ).liveData
     }
 
     suspend fun getListStoriesWithLocation(token : String): FetchResult<List<ListStoryItem>> {
