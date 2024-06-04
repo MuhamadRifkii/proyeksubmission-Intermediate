@@ -15,7 +15,19 @@ import com.dicoding.proyeksubmission_intermediate.view.detail_page.DetailStoryAc
 
 class StoryAdapter : PagingDataAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
-    inner class StoryViewHolder(val binding: StoryItemBinding) :
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
+        val binding = StoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return StoryViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
+        val story = getItem(position)
+        if (story != null) {
+            holder.bind(story)
+        }
+    }
+
+    class StoryViewHolder(val binding: StoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             binding.username.text = story.name
@@ -36,21 +48,6 @@ class StoryAdapter : PagingDataAdapter<ListStoryItem, StoryAdapter.StoryViewHold
                 )
                 itemView.context.startActivity(intent, options.toBundle())
             }
-
-            itemView.alpha = 0f
-            itemView.animate().alpha(1f).setDuration(250).start()
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
-        val binding = StoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return StoryViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        val story = getItem(position)
-        if (story != null) {
-            holder.bind(story)
         }
     }
 

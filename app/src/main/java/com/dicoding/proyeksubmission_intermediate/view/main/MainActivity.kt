@@ -4,13 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.proyeksubmission_intermediate.R
 import com.dicoding.proyeksubmission_intermediate.data.adapter.LoadingStateAdapter
 import com.dicoding.proyeksubmission_intermediate.data.adapter.StoryAdapter
@@ -20,8 +15,6 @@ import com.dicoding.proyeksubmission_intermediate.view.language.LanguageActivity
 import com.dicoding.proyeksubmission_intermediate.view.maps.MapsActivity
 import com.dicoding.proyeksubmission_intermediate.view.upload.UploadStoryActivity
 import com.dicoding.proyeksubmission_intermediate.view.welcome.WelcomeActivity
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
@@ -40,27 +33,18 @@ class MainActivity : AppCompatActivity() {
         sessionObserver()
         setupRecyclerView()
         uploadStory()
-        observePagedStories()
     }
 
     private fun setupRecyclerView() {
         storyAdapter = StoryAdapter()
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = storyAdapter.withLoadStateFooter(
                 footer = LoadingStateAdapter {
                     storyAdapter.retry() }
             )
         }
-
-        lifecycleScope.launch {
-            storyAdapter.loadStateFlow.collectLatest { loadStates ->
-                binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
-                if (loadStates.refresh is LoadState.Error) {
-                    val errorState = loadStates.refresh as LoadState.Error
-                    handleError(errorState.error)
-                }
-            }
+        viewModel.pagedStories.observe(this) {
+            storyAdapter.submitData(lifecycle, it)
         }
     }
 
@@ -70,28 +54,20 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 finish()
-            } else {
-                if (viewModel.pagedStories.value == null) {
-                    viewModel.getListStories()
-                }
             }
         }
     }
 
     override fun onResume() {
+        super.onResume()
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
                 val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
                 finish()
-            } else {
-                if (viewModel.pagedStories.value == null) {
-                    viewModel.getListStories()
-                }
             }
         }
-        super.onResume()
     }
 
     private fun uploadStory() {
@@ -100,15 +76,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-    private fun observePagedStories() {
-        viewModel.pagedStories.observe(this) { pagingData ->
-            pagingData?.let {
-                storyAdapter.submitData(lifecycle, it)
-            }
-        }
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_item, menu)
@@ -133,9 +100,5 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun handleError(error: Throwable) {
-        Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
     }
 }

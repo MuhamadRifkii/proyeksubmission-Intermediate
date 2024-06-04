@@ -58,7 +58,7 @@ class UserRepository private constructor(
                 pageSize = 5,
                 enablePlaceholders = false
             ),
-            remoteMediator = StoryRemoteMediator(storyDatabase, apiService),
+            remoteMediator = StoryRemoteMediator(storyDatabase, this),
             pagingSourceFactory = {
                 storyDatabase.storyDao().getAllStory()
             }
